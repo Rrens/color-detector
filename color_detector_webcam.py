@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-# Threshold HSV buat deteksi area coklat
 lower_brown = np.array([8,  60,  20])
 upper_brown = np.array([30, 255, 255])
 
@@ -13,18 +12,17 @@ def classify_lightness(l):
     else:
         return "Coklat Terang"
 
-cap = cv2.VideoCapture(0)  # 0 = default webcam
+cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     raise RuntimeError("Webcam tidak terdeteksi!")
 
-print("Tekan 'q' buat keluar")
+# print("Tekan 'q' buat keluar")
 
 while True:
     ret, frame = cap.read()
     if not ret:
         break
 
-    # Konversi warna
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, lower_brown, upper_brown)
 
@@ -37,7 +35,6 @@ while True:
         L_med = np.median(L_masked)
         label = classify_lightness(L_med)
 
-    # Tampilkan hasil
     overlay = frame.copy()
     overlay[mask > 0] = (0, 255, 0)
     vis = cv2.addWeighted(frame, 0.7, overlay, 0.3, 0)
